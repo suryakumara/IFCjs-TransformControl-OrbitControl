@@ -1,5 +1,13 @@
 # IFCjs-TransformControl-OrbitControl
 
+- Build
+
 ```sh
-yarn start
+yarn build
+```
+
+- Getting Start
+
+```sh
+yarn run watch
 ```
