@@ -12,6 +12,17 @@ import {
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+
+import {
+  IFCWALLSTANDARDCASE,
+  IFCSLAB,
+  IFCDOOR,
+  IFCWINDOW,
+  IFCFURNISHINGELEMENT,
+  IFCMEMBER,
+  IFCPLATE,
+} from "web-ifc";
 
 //Creates the Three.js scene
 const scene = new Scene();
@@ -65,14 +76,26 @@ const controls = new OrbitControls(camera, threeCanvas);
 controls.enableDamping = true;
 controls.target.set(-2, 0, 0);
 
-const geometry = new BoxGeometry(5, 5, 5);
-const material = new MeshBasicMaterial({ color: 0xffff00 });
-const cube = new Mesh(geometry, material);
-scene.add(cube);
+const cubeGeometry1 = new BoxGeometry(5, 5, 5);
+const cubeGeometry2 = new BoxGeometry(3, 3, 3);
+const materialYellow = new MeshBasicMaterial({ color: 0xffff00 });
+const materialRed = new MeshBasicMaterial({ color: 0xff4f40 });
+const cube = new Mesh(cubeGeometry1, materialYellow);
+const cube2 = new Mesh(cubeGeometry2, materialRed);
+cube.position.x = 7;
+cube2.position.x = -7;
+scene.add(cube, cube2);
 
 const transformControl = new TransformControls(camera, threeCanvas);
 transformControl.attach(cube);
 scene.add(transformControl);
+
+let human;
+const loaderGLTF = new GLTFLoader();
+loaderGLTF.load("../public/human3.gltf", (gltf) => {
+  human = gltf.scene;
+  scene.add(human);
+});
 
 window.addEventListener("keydown", function (event) {
   switch (event.code) {
@@ -118,10 +141,31 @@ const ifcLoader = new IFCLoader();
 const input = document.getElementById("file-input");
 input.addEventListener(
   "change",
-  (changed) => {
+  async (changed) => {
     const file = changed.target.files[0];
     var ifcURL = URL.createObjectURL(file);
     ifcLoader.load(ifcURL, (ifcModel) => scene.add(ifcModel));
   },
   false
 );
+
+const inputList = document.querySelectorAll("#position-panel > input");
+let newPos = { x: 0, y: 0, z: 0 };
+
+inputList[0].addEventListener("change", (e) => {
+  newPos = { ...newPos, x: e.target.value };
+});
+inputList[1].addEventListener("change", (e) => {
+  newPos = { ...newPos, y: e.target.value };
+});
+
+inputList[2].addEventListener("change", (e) => {
+  newPos = { ...newPos, z: e.target.value };
+});
+
+const btnSubmit = document.getElementById("submit");
+btnSubmit.addEventListener("click", () => {
+  human.position.x = newPos.x;
+  human.position.y = newPos.y;
+  human.position.z = newPos.z;
+});
