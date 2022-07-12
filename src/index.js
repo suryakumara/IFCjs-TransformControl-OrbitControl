@@ -94,6 +94,7 @@ let human;
 const loaderGLTF = new GLTFLoader();
 loaderGLTF.load("../public/human3.gltf", (gltf) => {
   human = gltf.scene;
+
   scene.add(human);
 });
 
