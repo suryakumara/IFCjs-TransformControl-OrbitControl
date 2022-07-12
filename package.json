@@ -1,0 +1,18 @@
+{
+  "name": "ifcjs-sample",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup -c ./rollup.config.js",
+    "watch": "rollup -w -c ./rollup.config.js"
+  },
+  "dependencies": {
+    "three": "^0.142.0",
+    "web-ifc-three": "^0.0.118"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "rollup": "^2.76.0"
+  }
+}
